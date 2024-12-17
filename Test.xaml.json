@@ -1,0 +1,21 @@
+{
+  "DisplayName": "Test",
+  "Tooltip": null,
+  "HelpLink": null,
+  "Color": null,
+  "OriginalIconFileName": null,
+  "Arguments": [
+    {
+      "Name": "input",
+      "DisplayName": "input",
+      "Category": null,
+      "Tooltip": null,
+      "Placeholder": "11/10/2017 12:37 AM",
+      "Widget": null,
+      "IsRequired": false,
+      "IsPrincipal": true,
+      "ArgumentType": 0,
+      "DataSourceItems": null
+    }
+  ]
+}
