@@ -1,8 +1,11 @@
-<Activity mc:Ignorable="sap sap2010" x:Class="Process" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Activity mc:Ignorable="sap sap2010" x:Class="Process" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:a="clr-namespace:APP_SYP;assembly=APP_SYP" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:njl="clr-namespace:Newtonsoft.Json.Linq;assembly=Newtonsoft.Json" xmlns:s="clr-namespace:System;assembly=System.Private.CoreLib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
     <x:Property sap2010:Annotation.AnnotationText="Transaction item to be processed." Name="in_TransactionItem" Type="InArgument(ui:QueueItem)" />
     <x:Property Name="Config" Type="InArgument(scg:Dictionary(x:String, x:Object))" />
     <x:Property Name="TransactionData" Type="InOutArgument(scg:Dictionary(x:String, x:Object))" />
+    <x:Property Name="inTransactionID" Type="InArgument(x:String)" />
+    <x:Property Name="inTransactionType" Type="InArgument(x:String)" />
+    <x:Property Name="inTransactionName" Type="InArgument(x:String)" />
   </x:Members>
   <VisualBasic.Settings>
     <x:Null />
@@ -41,6 +44,25 @@
       <x:String>UiPath.UIAutomationCore.Contracts</x:String>
       <x:String>UiPath.Platform.SyncObjects</x:String>
       <x:String>System.Reflection</x:String>
+      <x:String>Newtonsoft.Json.Linq</x:String>
+      <x:String>Newtonsoft.Json</x:String>
+      <x:String>System.Dynamic</x:String>
+      <x:String>System.ComponentModel</x:String>
+      <x:String>System.Collections.Specialized</x:String>
+      <x:String>APP_SYP</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>UiPath.Core.Activities.Orchestrator</x:String>
+      <x:String>UiPath.Web</x:String>
+      <x:String>UiPath.Platform.ResourceHandling</x:String>
+      <x:String>System.Security</x:String>
+      <x:String>UiPath.Web.Activities</x:String>
+      <x:String>System.Linq.Expressions</x:String>
+      <x:String>System.Numerics</x:String>
+      <x:String>System.Xml.Serialization</x:String>
+      <x:String>COM_SYP</x:String>
+      <x:String>System.Activities.Runtime.Collections</x:String>
+      <x:String>MySqlConnector</x:String>
+      <x:String>System.Data.Common</x:String>
     </scg:List>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -87,11 +109,47 @@
       <AssemblyReference>System.Reflection.DispatchProxy</AssemblyReference>
       <AssemblyReference>System.Reflection.TypeExtensions</AssemblyReference>
       <AssemblyReference>System.Reflection.Metadata</AssemblyReference>
+      <AssemblyReference>netstandard</AssemblyReference>
+      <AssemblyReference>Newtonsoft.Json</AssemblyReference>
+      <AssemblyReference>System.Linq.Expressions</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.EventBasedAsync</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Primitives</AssemblyReference>
+      <AssemblyReference>System.Collections.Specialized</AssemblyReference>
+      <AssemblyReference>System.Collections.NonGeneric</AssemblyReference>
+      <AssemblyReference>APP_SYP</AssemblyReference>
+      <AssemblyReference>APP_SYP.Core</AssemblyReference>
+      <AssemblyReference>System.Text.Encoding.CodePages</AssemblyReference>
+      <AssemblyReference>UiPath.Web</AssemblyReference>
+      <AssemblyReference>System.Runtime.InteropServices</AssemblyReference>
+      <AssemblyReference>UiPath.Web.Activities</AssemblyReference>
+      <AssemblyReference>System.Runtime.Numerics</AssemblyReference>
+      <AssemblyReference>System.Memory.Data</AssemblyReference>
+      <AssemblyReference>UiPath.Excel.Activities.Design</AssemblyReference>
+      <AssemblyReference>System.Private.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.Private.DataContractSerialization</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization.Formatters</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization.Primitives</AssemblyReference>
+      <AssemblyReference>System.Linq.Async</AssemblyReference>
+      <AssemblyReference>System.Private.Xml</AssemblyReference>
+      <AssemblyReference>COM_SYP.Core</AssemblyReference>
+      <AssemblyReference>MySqlConnector</AssemblyReference>
+      <AssemblyReference>System.Data.Common</AssemblyReference>
+      <AssemblyReference>System.Linq.Async.Queryable</AssemblyReference>
+      <AssemblyReference>System.Linq.Parallel</AssemblyReference>
+      <AssemblyReference>System.Collections.Immutable</AssemblyReference>
+      <AssemblyReference>System.Linq.Queryable</AssemblyReference>
+      <AssemblyReference>Microsoft.Extensions.DependencyModel</AssemblyReference>
     </scg:List>
   </TextExpression.ReferencesForImplementation>
-  <Sequence sap2010:Annotation.AnnotationText="Invoke major steps of the business process, which are usually implemented by multiple subworkflows.&#xA;&#xA;If a BusinessRuleException is thrown, the transaction is skipped. &#xA;If another kind of exception occurs, the current transaction can be retried. " DisplayName="Process" sap:VirtualizedContainerService.HintSize="1213.6000000000001,1689.6" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence sap2010:Annotation.AnnotationText="" DisplayName="Process" sap:VirtualizedContainerService.HintSize="677.6000000000001,6056" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
-      <Variable x:TypeArguments="x:String" Name="wfiCase" />
+      <Variable x:TypeArguments="njl:JObject" Name="vJSON" />
+      <Variable x:TypeArguments="scg:Dictionary(x:String, x:Object)" Name="vSeropel" />
+      <Variable x:TypeArguments="scg:List(scg:Dictionary(x:String, x:Object))" Name="vArrPunt" />
+      <Variable x:TypeArguments="scg:Dictionary(x:String, x:Object)" Name="vCat" />
+      <Variable x:TypeArguments="scg:Dictionary(x:String, x:Object)" Name="vPunt" />
+      <Variable x:TypeArguments="scg:Dictionary(x:String, x:Object)" Name="vEpi" />
+      <Variable x:TypeArguments="scg:List(scg:Dictionary(x:String, x:Object))" Name="vArrEpi" />
     </Sequence.Variables>
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -99,77 +157,298 @@
         <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <ui:LogMessage DisplayName="Log Message Process Start" sap:VirtualizedContainerService.HintSize="500.8,174.4" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[&quot;Started Process&quot;]" />
-    <ui:Comment DisplayName="Comment (placeholder)" sap:VirtualizedContainerService.HintSize="500.8,88" sap2010:WorkflowViewState.IdRef="Comment_1" Text="//  Invoke steps of the process" />
-    <If Condition="[new Random().Next(1,100) &gt; 70]" DisplayName="If random, Throw business exception" sap:VirtualizedContainerService.HintSize="500.8,372.8" sap2010:WorkflowViewState.IdRef="If_1">
+    <ui:LogMessage DisplayName="Log Message Process Start" sap:VirtualizedContainerService.HintSize="568,174.4" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[&quot;Started Process&quot;]" />
+    <ui:MultipleAssign DisplayName="Asignación múltiple" sap:VirtualizedContainerService.HintSize="568,180" sap2010:WorkflowViewState.IdRef="MultipleAssign_1">
+      <ui:MultipleAssign.AssignOperations>
+        <scg:List x:TypeArguments="ui:AssignOperation" Capacity="4">
+          <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_1">
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="scg:List(scg:Dictionary(x:String, x:Object))">[vArrPunt]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="scg:List(scg:Dictionary(x:String, x:Object))">[New List(Of Dictionary(Of String, Object)) From {}]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+          <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_2">
+            <ui:AssignOperation.To>
+              <OutArgument x:TypeArguments="scg:List(scg:Dictionary(x:String, x:Object))">[vArrEpi]</OutArgument>
+            </ui:AssignOperation.To>
+            <ui:AssignOperation.Value>
+              <InArgument x:TypeArguments="scg:List(scg:Dictionary(x:String, x:Object))">[New List(Of Dictionary(Of String, Object)) From {}]</InArgument>
+            </ui:AssignOperation.Value>
+          </ui:AssignOperation>
+        </scg:List>
+      </ui:MultipleAssign.AssignOperations>
+    </ui:MultipleAssign>
+    <If Condition="[inTransactionType.Equals(&quot;2&quot;)]" DisplayName="Si" sap:VirtualizedContainerService.HintSize="568,3126.4" sap2010:WorkflowViewState.IdRef="If_1">
       <If.Then>
-        <Throw DisplayName="Throw business exception" Exception="[new BusinessRuleException(&quot;Strict business exception&quot;)]" sap:VirtualizedContainerService.HintSize="334.4,90.4" sap2010:WorkflowViewState.IdRef="Throw_1" />
-      </If.Then>
-      <If.Else>
-        <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="416,89.6" sap2010:WorkflowViewState.IdRef="Sequence_2">
+        <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="483.2,1096.8" sap2010:WorkflowViewState.IdRef="Sequence_3">
           <sap:WorkflowViewStateService.ViewState>
             <scg:Dictionary x:TypeArguments="x:String, x:Object">
               <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             </scg:Dictionary>
           </sap:WorkflowViewStateService.ViewState>
+          <TryCatch DisplayName="Intentar capturar" sap:VirtualizedContainerService.HintSize="449.6,561.6" sap2010:WorkflowViewState.IdRef="TryCatch_1">
+            <TryCatch.Try>
+              <a:ObtenerJSONTMDB sap:VirtualizedContainerService.HintSize="334.4,298.4" sap2010:WorkflowViewState.IdRef="ObtenerJSONTMDB_3" inID="[inTransactionID]" inKey="[Config(&quot;TMDB-API-TOKEN&quot;).ToString]" inLanguage="[Config(&quot;TMDB-API-LANGUAGE&quot;).ToString]" inURL="[Config(&quot;TMDB-API-MOVIES&quot;).ToString]" outJson="[vJSON]" />
+            </TryCatch.Try>
+            <TryCatch.Catches>
+              <Catch x:TypeArguments="s:Exception" sap:VirtualizedContainerService.HintSize="403.2,23.2" sap2010:WorkflowViewState.IdRef="Catch`1_1">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                    <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <ActivityAction x:TypeArguments="s:Exception">
+                  <ActivityAction.Argument>
+                    <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
+                  </ActivityAction.Argument>
+                  <Rethrow DisplayName="Arrojar de nuevo" sap:VirtualizedContainerService.HintSize="334.4,24.8" sap2010:WorkflowViewState.IdRef="Rethrow_2" />
+                </ActivityAction>
+              </Catch>
+            </TryCatch.Catches>
+          </TryCatch>
+          <If Condition="[vJSON.ContainsKey(&quot;id&quot;) AndAlso String.IsNullOrEmpty(vJSON(&quot;id&quot;).ToString()) AndAlso&#xA;vJSON.ContainsKey(&quot;title&quot;) AndAlso String.IsNullOrEmpty(vJSON(&quot;title&quot;).ToString()) Or&#xA;vJSON.ContainsKey(&quot;overview&quot;) AndAlso String.IsNullOrEmpty(vJSON(&quot;overview&quot;).ToString()) Or&#xA;TypeOf vJSON(&quot;genres&quot;) Is JArray AndAlso vJSON(&quot;genres&quot;).Count()=0 Or&#xA;vJSON.ContainsKey(&quot;poster_path&quot;) AndAlso String.IsNullOrEmpty(vJSON(&quot;poster_path&quot;).ToString()) Or&#xA;vJSON.ContainsKey(&quot;release_date&quot;) AndAlso String.IsNullOrEmpty(vJSON(&quot;release_date&quot;).ToString()) Or&#xA;vJSON.ContainsKey(&quot;vote_average&quot;) AndAlso String.IsNullOrEmpty(vJSON(&quot;vote_average&quot;).ToString())]" DisplayName="Si" sap:VirtualizedContainerService.HintSize="449.6,368.8" sap2010:WorkflowViewState.IdRef="If_3">
+            <If.Then>
+              <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="416,173.6" sap2010:WorkflowViewState.IdRef="Sequence_11">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <Throw DisplayName="Lanzar excepción" Exception="[New BusinessRuleException(&quot;No se han obtenido todos los campos&quot;)]" sap:VirtualizedContainerService.HintSize="382.4,113.6" sap2010:WorkflowViewState.IdRef="Throw_2" />
+              </Sequence>
+            </If.Then>
+            <If.Else>
+              <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="416,24.8" sap2010:WorkflowViewState.IdRef="Sequence_12">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                    <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+              </Sequence>
+            </If.Else>
+          </If>
+          <Assign DisplayName="Asignar" sap:VirtualizedContainerService.HintSize="449.6,106.4" sap2010:WorkflowViewState.IdRef="Assign_1">
+            <Assign.To>
+              <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">[vSeropel]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)" xml:space="preserve">[New Dictionary(Of String, Object) From {
+    {"@idSeropel", vJSON.Item("id").ToString},
+    {"@tipo", inTransactionType.ToString},
+    {"@idCat", vJSON.Item("genres")(0).Item("id").ToString},
+    {"@title", vJSON.Item("title").ToString},
+    {"@description", vJSON.Item("overview").ToString},
+    {"@cover", Config("TMDB-IMAGE").ToString+vJSON.Item("poster_path").ToString},
+    {"@date", vJSON.Item("release_date").ToString}
+}]</InArgument>
+            </Assign.Value>
+          </Assign>
         </Sequence>
-      </If.Else>
-    </If>
-    <If Condition="[new Random().Next(1,100) &gt; 50]" DisplayName="If random, Throw application exception" sap:VirtualizedContainerService.HintSize="500.8,372.8" sap2010:WorkflowViewState.IdRef="If_2">
-      <If.Then>
-        <Throw DisplayName="Throw application exception" Exception="[new Exception(&quot;Random application exception&quot;)]" sap:VirtualizedContainerService.HintSize="334.4,90.4" sap2010:WorkflowViewState.IdRef="Throw_2" />
       </If.Then>
       <If.Else>
-        <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="416,89.6" sap2010:WorkflowViewState.IdRef="Sequence_3">
+        <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="534.4,1859.2" sap2010:WorkflowViewState.IdRef="Sequence_2">
+          <Sequence.Variables>
+            <Variable x:TypeArguments="x:Int32" Default="1" Name="season" />
+          </Sequence.Variables>
           <sap:WorkflowViewStateService.ViewState>
             <scg:Dictionary x:TypeArguments="x:String, x:Object">
               <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             </scg:Dictionary>
           </sap:WorkflowViewStateService.ViewState>
+          <TryCatch DisplayName="Intentar capturar" sap:VirtualizedContainerService.HintSize="500.8,561.6" sap2010:WorkflowViewState.IdRef="TryCatch_2">
+            <TryCatch.Try>
+              <a:ObtenerJSONTMDB sap:VirtualizedContainerService.HintSize="334.4,298.4" sap2010:WorkflowViewState.IdRef="ObtenerJSONTMDB_4" inID="[inTransactionID]" inKey="[Config(&quot;TMDB-API-TOKEN&quot;).ToString]" inLanguage="[Config(&quot;TMDB-API-LANGUAGE&quot;).ToString]" inURL="[Config(&quot;TMDB-API-TVSERIES&quot;).ToString]" outJson="[vJSON]" />
+            </TryCatch.Try>
+            <TryCatch.Catches>
+              <Catch x:TypeArguments="s:Exception" sap:VirtualizedContainerService.HintSize="403.2,23.2" sap2010:WorkflowViewState.IdRef="Catch`1_2">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                    <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <ActivityAction x:TypeArguments="s:Exception">
+                  <ActivityAction.Argument>
+                    <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
+                  </ActivityAction.Argument>
+                  <Rethrow DisplayName="Arrojar de nuevo" sap:VirtualizedContainerService.HintSize="334.4,24.8" sap2010:WorkflowViewState.IdRef="Rethrow_1" />
+                </ActivityAction>
+              </Catch>
+            </TryCatch.Catches>
+          </TryCatch>
+          <If Condition="[vJSON.ContainsKey(&quot;id&quot;) AndAlso String.IsNullOrEmpty(vJSON(&quot;id&quot;).ToString()) Or&#xA;vJSON.ContainsKey(&quot;name&quot;) AndAlso String.IsNullOrEmpty(vJSON(&quot;name&quot;).ToString()) Or&#xA;vJSON.ContainsKey(&quot;overview&quot;) AndAlso String.IsNullOrEmpty(vJSON(&quot;overview&quot;).ToString()) Or&#xA;TypeOf vJSON(&quot;genres&quot;) Is JArray AndAlso vJSON(&quot;genres&quot;).Count()=0 Or&#xA;vJSON.ContainsKey(&quot;poster_path&quot;) AndAlso String.IsNullOrEmpty(vJSON(&quot;poster_path&quot;).ToString()) Or&#xA;vJSON.ContainsKey(&quot;first_air_date&quot;) AndAlso String.IsNullOrEmpty(vJSON(&quot;first_air_date&quot;).ToString()) Or&#xA;vJSON.ContainsKey(&quot;vote_average&quot;) AndAlso String.IsNullOrEmpty(vJSON(&quot;vote_average&quot;).ToString()) Or&#xA;vJSON.ContainsKey(&quot;episodes&quot;) AndAlso String.IsNullOrEmpty(vJSON(&quot;episodes&quot;).ToString())]" DisplayName="Si" sap:VirtualizedContainerService.HintSize="500.8,368.8" sap2010:WorkflowViewState.IdRef="If_2">
+            <If.Then>
+              <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="416,173.6" sap2010:WorkflowViewState.IdRef="Sequence_9">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <Throw DisplayName="Lanzar excepción" Exception="[New BusinessRuleException(&quot;No se han obtenido todos los campos&quot;)]" sap:VirtualizedContainerService.HintSize="382.4,113.6" sap2010:WorkflowViewState.IdRef="Throw_1" />
+              </Sequence>
+            </If.Then>
+            <If.Else>
+              <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="416,24.8" sap2010:WorkflowViewState.IdRef="Sequence_10">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                    <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+              </Sequence>
+            </If.Else>
+          </If>
+          <Assign DisplayName="Asignar" sap:VirtualizedContainerService.HintSize="500.8,115.2" sap2010:WorkflowViewState.IdRef="Assign_2">
+            <Assign.To>
+              <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">[vSeropel]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)" xml:space="preserve">[New Dictionary(Of String, Object) From {
+    {"@idSeropel", vJSON.Item("id").ToString},
+    {"@tipo", inTransactionType.ToString},
+    {"@idCat", vJSON.Item("genres")(0).Item("id").ToString},
+    {"@title", vJSON.Item("name").ToString},
+    {"@description", vJSON.Item("overview").ToString},
+    {"@cover", Config("TMDB-IMAGE").ToString+vJSON.Item("poster_path").ToString},
+    {"@date", vJSON.Item("first_air_date").ToString}
+}]</InArgument>
+            </Assign.Value>
+          </Assign>
+          <ui:ForEach x:TypeArguments="njl:JToken" CurrentIndex="{x:Null}" DisplayName="Para cada currentJToken" sap:VirtualizedContainerService.HintSize="500.8,753.6" sap2010:WorkflowViewState.IdRef="ForEach`1_1" Values="[vJSON.Item(&quot;seasons&quot;)]">
+            <ui:ForEach.Body>
+              <ActivityAction x:TypeArguments="njl:JToken">
+                <ActivityAction.Argument>
+                  <DelegateInArgument x:TypeArguments="njl:JToken" Name="currentJToken" />
+                </ActivityAction.Argument>
+                <Sequence DisplayName="Cuerpo" sap:VirtualizedContainerService.HintSize="467.2,616" sap2010:WorkflowViewState.IdRef="Sequence_6">
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                  <Assign DisplayName="Asignar" sap:VirtualizedContainerService.HintSize="433.6,115.2" sap2010:WorkflowViewState.IdRef="Assign_6">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">[vPunt]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)" xml:space="preserve">[New Dictionary(Of String, Object) From {
+    {"@idUsu", "0"},
+    {"@idSeropel", vJSON.Item("id").ToString},
+    {"@score", currentJToken.Item("vote_average").ToString},
+    {"@season", currentJToken("season_number").ToString},
+    {"@episode", "0"},
+    {"@idEst", "0"}	
+}]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <InvokeMethod DisplayName="Invocar método" sap:VirtualizedContainerService.HintSize="433.6,167.2" sap2010:WorkflowViewState.IdRef="InvokeMethod_1" MethodName="Add">
+                    <InvokeMethod.TargetObject>
+                      <InArgument x:TypeArguments="scg:List(scg:Dictionary(x:String, x:Object))">[vArrPunt]</InArgument>
+                    </InvokeMethod.TargetObject>
+                    <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">[vPunt]</InArgument>
+                  </InvokeMethod>
+                  <Assign DisplayName="Asignar" sap:VirtualizedContainerService.HintSize="433.6,115.2" sap2010:WorkflowViewState.IdRef="Assign_8">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">[vEpi]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)" xml:space="preserve">[New Dictionary(Of String, Object) From {
+    {"@idSeropel", vJSON.Item("id").ToString},
+    {"@season", currentJToken("season_number").ToString},
+    {"@episode", currentJToken("episode_count").ToString}
+}]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <InvokeMethod DisplayName="Invocar método" sap:VirtualizedContainerService.HintSize="433.6,158.4" sap2010:WorkflowViewState.IdRef="InvokeMethod_3" MethodName="Add">
+                    <InvokeMethod.TargetObject>
+                      <InArgument x:TypeArguments="scg:List(scg:Dictionary(x:String, x:Object))">[vArrEpi]</InArgument>
+                    </InvokeMethod.TargetObject>
+                    <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">[vEpi]</InArgument>
+                  </InvokeMethod>
+                </Sequence>
+              </ActivityAction>
+            </ui:ForEach.Body>
+          </ui:ForEach>
         </Sequence>
       </If.Else>
     </If>
-    <ui:WindowScope ApplicationWindow="{x:Null}" SearchScope="{x:Null}" TimeoutMS="{x:Null}" Window="{x:Null}" DisplayName="Attach Window 'notepad.exe'" sap:VirtualizedContainerService.HintSize="500.8,582.4" sap2010:WorkflowViewState.IdRef="WindowScope_1" Selector="&lt;wnd app='notepad.exe' cls='Notepad' title='* - Notepad' /&gt;">
-      <ui:WindowScope.Body>
-        <ActivityAction x:TypeArguments="x:Object">
+    <Assign DisplayName="Asignar" sap:VirtualizedContainerService.HintSize="568,115.2" sap2010:WorkflowViewState.IdRef="Assign_3">
+      <Assign.To>
+        <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">[vCat]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)" xml:space="preserve">[New Dictionary(Of String, Object) From {
+    {"@idCat", vJSON.Item("genres")(0).Item("id").ToString},
+    {"@name", vJSON.Item("genres")(0).Item("name").ToString}
+}]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <Assign DisplayName="Asignar" sap:VirtualizedContainerService.HintSize="568,115.2" sap2010:WorkflowViewState.IdRef="Assign_9">
+      <Assign.To>
+        <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">[vPunt]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)" xml:space="preserve">[New Dictionary(Of String, Object) From {
+    {"@idUsu", "0"},
+    {"@idSeropel", vJSON.Item("id").ToString},
+    {"@score", vJSON.Item("vote_average").ToString},
+    {"@season", "0"},
+    {"@episode", "0"},
+    {"@idEst", "0"}	
+}]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <InvokeMethod DisplayName="Invocar método" sap:VirtualizedContainerService.HintSize="568,166.4" sap2010:WorkflowViewState.IdRef="InvokeMethod_2" MethodName="Add">
+      <InvokeMethod.TargetObject>
+        <InArgument x:TypeArguments="scg:List(scg:Dictionary(x:String, x:Object))">[vArrPunt]</InArgument>
+      </InvokeMethod.TargetObject>
+      <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">[vPunt]</InArgument>
+    </InvokeMethod>
+    <a:InsertarActualizarDB sap:VirtualizedContainerService.HintSize="568,434.4" sap2010:WorkflowViewState.IdRef="InsertarActualizarDB_1" inDatabase="[Config(&quot;DB-Database&quot;).ToString]" inParameters="[vCat]" inPassword="[Config(&quot;DB-Password&quot;).ToString]" inSQLActualizar="[Config(&quot;SQL-UpdateCategoria&quot;).ToString]" inSQLInsertar="[Config(&quot;SQL-InsertCategoria&quot;).ToString]" inServer="[Config(&quot;DB-Server&quot;).ToString]" inUser="[Config(&quot;DB-User&quot;).ToString]" />
+    <a:InsertarActualizarDB sap:VirtualizedContainerService.HintSize="568,434.4" sap2010:WorkflowViewState.IdRef="InsertarActualizarDB_2" inDatabase="[Config(&quot;DB-Database&quot;).ToString]" inParameters="[vSeropel]" inPassword="[Config(&quot;DB-Password&quot;).ToString]" inSQLActualizar="[Config(&quot;SQL-UpdateSeropel&quot;).ToString]" inSQLInsertar="[Config(&quot;SQL-InsertSeropel&quot;).ToString]" inServer="[Config(&quot;DB-Server&quot;).ToString]" inUser="[Config(&quot;DB-User&quot;).ToString]" />
+    <ui:ForEach x:TypeArguments="scg:Dictionary(x:String, x:Object)" CurrentIndex="{x:Null}" DisplayName="Para cada vEpi" sap:VirtualizedContainerService.HintSize="568,632" sap2010:WorkflowViewState.IdRef="ForEach`1_2" Values="[vArrEpi]">
+      <ui:ForEach.Body>
+        <ActivityAction x:TypeArguments="scg:Dictionary(x:String, x:Object)">
           <ActivityAction.Argument>
-            <DelegateInArgument x:TypeArguments="x:Object" Name="ContextTarget" />
+            <DelegateInArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)" Name="vEpi" />
           </ActivityAction.Argument>
-          <Sequence DisplayName="With Window" sap:VirtualizedContainerService.HintSize="467.2,450.4" sap2010:WorkflowViewState.IdRef="Sequence_4">
+          <Sequence DisplayName="Cuerpo" sap:VirtualizedContainerService.HintSize="416,485.6" sap2010:WorkflowViewState.IdRef="Sequence_7">
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
               </scg:Dictionary>
             </sap:WorkflowViewStateService.ViewState>
-            <ui:Activate DelayBefore="{x:Null}" DelayMS="{x:Null}" sap:VirtualizedContainerService.HintSize="433.6,118.4" sap2010:WorkflowViewState.IdRef="Activate_1">
-              <ui:Activate.Target>
-                <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Selector="{x:Null}" Id="52798cf2-c4e3-4baf-8576-fec111c7e126" WaitForReady="INTERACTIVE">
-                  <ui:Target.TimeoutMS>
-                    <InArgument x:TypeArguments="x:Int32" />
-                  </ui:Target.TimeoutMS>
-                </ui:Target>
-              </ui:Activate.Target>
-            </ui:Activate>
-            <ui:TypeInto DelayBefore="{x:Null}" DelayBetweenKeys="{x:Null}" DelayMS="{x:Null}" Activate="True" AlterIfDisabled="True" ClickBeforeTyping="False" DisplayName="Type into 'editable text'" EmptyField="False" sap:VirtualizedContainerService.HintSize="433.6,167.2" sap2010:WorkflowViewState.IdRef="TypeInto_1" SendWindowMessages="True" SimulateType="False" Text="[TransactionData(&quot;Name&quot;).ToString + vbTab + TransactionData(&quot;Age&quot;).ToString+ &quot;[k(enter)]&quot;]">
-              <ui:TypeInto.Target>
-                <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Id="79ad5238-0dca-4335-a4fd-f8ae131ef013" Selector="&lt;wnd cls='Edit' /&gt;&lt;ctrl role='editable text' /&gt;" WaitForReady="INTERACTIVE">
-                  <ui:Target.TimeoutMS>
-                    <InArgument x:TypeArguments="x:Int32" />
-                  </ui:Target.TimeoutMS>
-                </ui:Target>
-              </ui:TypeInto.Target>
-            </ui:TypeInto>
-            <Assign DisplayName="Set sample outcome" sap:VirtualizedContainerService.HintSize="433.6,104.8" sap2010:WorkflowViewState.IdRef="Assign_1">
-              <Assign.To>
-                <OutArgument x:TypeArguments="x:Object">[TransactionData("Complete")]</OutArgument>
-              </Assign.To>
-              <Assign.Value>
-                <InArgument x:TypeArguments="x:Object">[new Random().Next(1,100)]</InArgument>
-              </Assign.Value>
-            </Assign>
+            <a:InsertarActualizarDB sap:VirtualizedContainerService.HintSize="382.4,425.6" sap2010:WorkflowViewState.IdRef="InsertarActualizarDB_3" inDatabase="[Config(&quot;DB-Database&quot;).ToString]" inParameters="[vEpi]" inPassword="[Config(&quot;DB-Password&quot;).ToString]" inSQLActualizar="[Config(&quot;SQL-UpdateEpisodio&quot;).ToString]" inSQLInsertar="[Config(&quot;SQL-InsertEpisodio&quot;).ToString]" inServer="[Config(&quot;DB-Server&quot;).ToString]" inUser="[Config(&quot;DB-User&quot;).ToString]" />
           </Sequence>
         </ActivityAction>
-      </ui:WindowScope.Body>
-    </ui:WindowScope>
+      </ui:ForEach.Body>
+    </ui:ForEach>
+    <ui:ForEach x:TypeArguments="scg:Dictionary(x:String, x:Object)" CurrentIndex="{x:Null}" DisplayName="Para cada vPunt" sap:VirtualizedContainerService.HintSize="568,623.2" sap2010:WorkflowViewState.IdRef="ForEach`1_3" Values="[vArrPunt]">
+      <ui:ForEach.Body>
+        <ActivityAction x:TypeArguments="scg:Dictionary(x:String, x:Object)">
+          <ActivityAction.Argument>
+            <DelegateInArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)" Name="vPunt" />
+          </ActivityAction.Argument>
+          <Sequence DisplayName="Cuerpo" sap:VirtualizedContainerService.HintSize="416,485.6" sap2010:WorkflowViewState.IdRef="Sequence_8">
+            <sap:WorkflowViewStateService.ViewState>
+              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+              </scg:Dictionary>
+            </sap:WorkflowViewStateService.ViewState>
+            <a:InsertarActualizarDB sap:VirtualizedContainerService.HintSize="382.4,425.6" sap2010:WorkflowViewState.IdRef="InsertarActualizarDB_4" inDatabase="[Config(&quot;DB-Database&quot;).ToString]" inParameters="[vPunt]" inPassword="[Config(&quot;DB-Password&quot;).ToString]" inSQLActualizar="[Config(&quot;SQL-UpdatePuntuacion&quot;).ToString]" inSQLInsertar="[Config(&quot;SQL-InsertPuntuacion&quot;).ToString]" inServer="[Config(&quot;DB-Server&quot;).ToString]" inUser="[Config(&quot;DB-User&quot;).ToString]" />
+          </Sequence>
+        </ActivityAction>
+      </ui:ForEach.Body>
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+    </ui:ForEach>
   </Sequence>
 </Activity>

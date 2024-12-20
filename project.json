@@ -1,9 +1,11 @@
 {
-  "name": "RFW-Performer",
+  "name": "SYP-Performer",
   "projectId": "8076357a-4b01-4621-a75d-d9ca68a97592",
   "description": "# Marco Empresarial Robótico (REFramework)\r\n\r\nEste marco está diseñado para automatizar procesos empresariales mediante el uso de una estructura transaccional con un enfoque de máquina de estados. Proporciona manejo avanzado de excepciones, recuperación de aplicaciones y una configuración externa.",
   "main": "Main.xaml",
   "dependencies": {
+    "APP_SYP": "1.2.9",
+    "COM_SYP": "1.2.0",
     "UiPath.Credentials.Activities": "2.1.0",
     "UiPath.Excel.Activities": "2.24.4",
     "UiPath.Mail.Activities": "1.24.11",
@@ -47,7 +49,8 @@
     },
     "fileInfoCollection": [],
     "modernBehavior": false,
-    "saveToCloud": false
+    "saveToCloud": false,
+    "cloudProjectUrl": "https://cloud.uipath.com/mb3gestion/studio_/designer/32a86d3a-cd58-46ea-a6b1-2fc90251449e"
   },
   "expressionLanguage": "VisualBasic",
   "entryPoints": [
